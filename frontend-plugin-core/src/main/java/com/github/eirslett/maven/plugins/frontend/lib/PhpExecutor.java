@@ -1,22 +1,22 @@
 package com.github.eirslett.maven.plugins.frontend.lib;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 
-final class PhpExecutor {
+final class PhpExecutor extends AbstractExecutor {
 
     private final ProcessExecutor executor;
 
-    public PhpExecutor(File workingDirectory, List<String> arguments, Map<String, String> additionalEnvironment) {
+    public PhpExecutor(PhpExecutorConfig config, List<String> arguments, Map<String, String> additionalEnvironment) {
+        super(arguments);
         List<String> localPaths = new ArrayList<>();
         executor = new ProcessExecutor(
-                workingDirectory,
+                config.getWorkingDirectory(),
                 localPaths,
-                Utils.prepend("php", arguments),
+                Utils.prepend(config.getPhpPath().getAbsolutePath(), arguments),
                 Platform.guess(),
                 additionalEnvironment);
     }

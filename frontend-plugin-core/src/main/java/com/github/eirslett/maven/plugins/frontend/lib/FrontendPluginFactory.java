@@ -33,8 +33,8 @@ public final class FrontendPluginFactory {
         return new YarnInstaller(getInstallConfig(), new DefaultArchiveExtractor(), new DefaultFileDownloader(proxy));
     }
 
-    public ComposerInstaller getComposerInstaller(ProxyConfig proxy) {
-        return new ComposerInstaller(getInstallConfig(), new DefaultArchiveExtractor(), new DefaultFileDownloader(proxy));
+    public ComposerInstaller getComposerInstaller(String version, ProxyConfig proxy) {
+        return new ComposerInstaller(getInstallConfig(), version, new DefaultFileDownloader(proxy));
     }
 
     public BowerRunner getBowerRunner(ProxyConfig proxy) {
@@ -71,6 +71,10 @@ public final class FrontendPluginFactory {
 
     public WebpackRunner getWebpackRunner(){
         return new DefaultWebpackRunner(getExecutorConfig());
+    }
+
+    public ComposerRunner getComposerRunner(String taskName) {
+        return new ComposerRunner(new PhpExecutorConfig(getInstallConfig()), taskName);
     }
 
     private NodeExecutorConfig getExecutorConfig() {

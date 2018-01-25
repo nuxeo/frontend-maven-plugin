@@ -14,14 +14,11 @@ import static com.github.eirslett.maven.plugins.frontend.lib.Utils.normalize;
 import static com.github.eirslett.maven.plugins.frontend.lib.Utils.prepend;
 import java.util.Map;
 
-abstract class NodeTaskExecutor {
-    private static final String DS = "//";
-    private static final String AT = "@";
-    
+abstract class NodeTaskExecutor extends AbstractExecutor {
+
     private final Logger logger;
     private final String taskName;
     private final String taskLocation;
-    private final List<String> additionalArguments;
     private final NodeExecutorConfig config;
 
     public NodeTaskExecutor(NodeExecutorConfig config, String taskLocation) {
@@ -37,11 +34,11 @@ abstract class NodeTaskExecutor {
     }
 
     public NodeTaskExecutor(NodeExecutorConfig config, String taskName, String taskLocation, List<String> additionalArguments) {
+        super(additionalArguments);
         this.logger = LoggerFactory.getLogger(getClass());
         this.config = config;
         this.taskName = taskName;
         this.taskLocation = taskLocation;
-        this.additionalArguments = additionalArguments;
     }
 
     private static String getTaskNameFromLocation(String taskLocation) {
@@ -76,58 +73,4 @@ abstract class NodeTaskExecutor {
         return location;
     }
 
-
-
-    private List<String> getArguments(String args) {
-        List<String> arguments = new ArrayList<String>();
-        if (args != null && !args.equals("null") && !args.isEmpty()) {
-            arguments.addAll(Arrays.asList(args.split("\\s+")));
-        }
-
-        for (String argument : additionalArguments) {
-            if (!arguments.contains(argument)) {
-                arguments.add(argument);
-            }
-        }
-        return arguments;
-    }
-
-    private static String taskToString(String taskName, List<String> arguments) {
-        List<String> clonedArguments = new ArrayList<String>(arguments);
-        for (int i = 0; i < clonedArguments.size(); i++) {
-            final String s = clonedArguments.get(i);
-            final boolean maskMavenProxyPassword = s.contains("proxy=");
-            if (maskMavenProxyPassword) {
-                final String bestEffortMaskedPassword = maskPassword(s);
-                clonedArguments.set(i, bestEffortMaskedPassword);
-            }
-        }
-        return "'" + taskName + " " + implode(" ", clonedArguments) + "'";
-    }
-
-    private static String maskPassword(String proxyString) {
-        String retVal = proxyString;
-        if (proxyString != null && !"".equals(proxyString.trim())) {
-            boolean hasSchemeDefined = proxyString.contains("http:") || proxyString.contains("https:");
-            boolean hasProtocolDefined = proxyString.contains(DS);
-            boolean hasAtCharacterDefined = proxyString.contains(AT);
-            if (hasSchemeDefined && hasProtocolDefined && hasAtCharacterDefined) {
-                final int firstDoubleSlashIndex = proxyString.indexOf(DS);
-                final int lastAtCharIndex = proxyString.lastIndexOf(AT);
-                boolean hasPossibleURIUserInfo = firstDoubleSlashIndex < lastAtCharIndex;
-                if (hasPossibleURIUserInfo) {
-                    final String userInfo = proxyString.substring(firstDoubleSlashIndex + DS.length(), lastAtCharIndex);
-                    final String[] userParts = userInfo.split(":");
-                    if (userParts.length > 0) {
-                        final int startOfUserNameIndex = firstDoubleSlashIndex + DS.length();
-                        final int firstColonInUsernameOrEndOfUserNameIndex = startOfUserNameIndex + userParts[0].length();
-                        final String leftPart = proxyString.substring(0, firstColonInUsernameOrEndOfUserNameIndex);
-                        final String rightPart = proxyString.substring(lastAtCharIndex);
-                        retVal = leftPart + ":***" + rightPart;
-                    }
-                }
-            }
-        }
-        return retVal;
-    }
 }

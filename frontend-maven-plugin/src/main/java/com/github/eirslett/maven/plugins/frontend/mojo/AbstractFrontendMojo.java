@@ -3,6 +3,7 @@ package com.github.eirslett.maven.plugins.frontend.mojo;
 import java.io.File;
 import java.util.Map;
 
+import com.github.eirslett.maven.plugins.frontend.lib.CacheResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoFailureException;
@@ -59,6 +60,9 @@ public abstract class AbstractFrontendMojo extends AbstractMojo {
     @Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
     private RepositorySystemSession repositorySystemSession;
 
+    @Parameter()
+    protected CacheResolver cacheResolver;
+
     /**
      * Determines if this execution should be skipped.
      */
@@ -90,9 +94,11 @@ public abstract class AbstractFrontendMojo extends AbstractMojo {
             if (installDirectory == null) {
                 installDirectory = workingDirectory;
             }
+            if(cacheResolver == null) {
+                cacheResolver = new RepositoryCacheResolver(repositorySystemSession);
+            }
             try {
-                execute(new FrontendPluginFactory(workingDirectory, installDirectory,
-                        new RepositoryCacheResolver(repositorySystemSession)));
+                execute(new FrontendPluginFactory(workingDirectory, installDirectory, cacheResolver));
             } catch (TaskRunnerException e) {
                 if (testFailureIgnore && isTestingPhase()) {
                     getLog().error("There are test failures.\nFailed to run task: " + e.getMessage(), e);
