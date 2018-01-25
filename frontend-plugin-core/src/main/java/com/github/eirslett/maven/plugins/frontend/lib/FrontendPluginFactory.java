@@ -73,8 +73,8 @@ public final class FrontendPluginFactory {
         return new DefaultWebpackRunner(getExecutorConfig());
     }
 
-    public ComposerRunner getComposerRunner(String taskName) {
-        return new ComposerRunner(new PhpExecutorConfig(getInstallConfig()), taskName);
+    public ComposerRunner getComposerRunner(File composerPath) {
+        return new ComposerRunner(new PhpExecutorConfig(getInstallConfig()), composerPath);
     }
 
     private NodeExecutorConfig getExecutorConfig() {
