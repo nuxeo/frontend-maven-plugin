@@ -1,6 +1,7 @@
 package com.github.eirslett.maven.plugins.frontend.lib;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -12,10 +13,9 @@ final class PhpExecutor extends AbstractExecutor {
 
     public PhpExecutor(PhpExecutorConfig config, List<String> arguments, Map<String, String> additionalEnvironment) {
         super(arguments);
-        List<String> localPaths = new ArrayList<>();
         executor = new ProcessExecutor(
                 config.getWorkingDirectory(),
-                localPaths,
+                Collections.<String>emptyList(),
                 Utils.prepend(config.getPhpPath().getAbsolutePath(), arguments),
                 Platform.guess(),
                 additionalEnvironment);

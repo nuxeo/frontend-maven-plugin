@@ -1,6 +1,8 @@
 package com.github.eirslett.maven.plugins.frontend.lib;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public final class FrontendPluginFactory {
     
@@ -75,6 +77,9 @@ public final class FrontendPluginFactory {
 
     public ComposerRunner getComposerRunner(File composerPath) {
         return new ComposerRunner(new PhpExecutorConfig(getInstallConfig()), composerPath);
+    }
+    public PhpunitExecutor getPhpunitRunner(File phpunitPath) {
+        return new PhpunitExecutor(new PhpExecutorConfig(getInstallConfig()), phpunitPath);
     }
 
     private NodeExecutorConfig getExecutorConfig() {

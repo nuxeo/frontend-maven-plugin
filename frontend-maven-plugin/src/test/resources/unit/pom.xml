@@ -1,0 +1,24 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.nuxeo.build</groupId>
+  <artifactId>php-maven-plugin-tests-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <configuration>
+          <cacheResolver implementation="com.github.eirslett.maven.plugins.frontend.mojo.TestCacheResolver">
+            <destination>${build.directory}/frontend-maven-plugin-cache</destination>
+          </cacheResolver>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>
