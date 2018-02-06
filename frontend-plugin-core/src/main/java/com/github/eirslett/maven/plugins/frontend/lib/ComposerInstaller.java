@@ -11,6 +11,8 @@ public class ComposerInstaller {
 
     public static final String INSTALL_PATH = ".php_modules/bin";
 
+    public static final String VENDOR_PATH = "vendor";
+
     public static final String DEFAULT_DOWNLOAD_ROOT = "https://getcomposer.org/download/";
 
     private static final Object LOCK = new Object();
